@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Mantenimiento de zapatillas</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .form-container {
+            background-color: #f8f9fa;
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+            margin-top: 20px;
+        }
+
+        .form-label {
+            font-weight: 600;
+            color: #495057;
+        }
+
+        .header-section {
+            background-color: royalblue;
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+        }
+
+        .btn-group-custom {
+            gap: 10px;
+        }
+
+        .form-control:focus, .form-select:focus {
+            border-color: #198754;
+            box-shadow: 0 0 0 0.2rem rgba(25, 135, 84, 0.25);
+        }
+
+        .invalid-feedback {
+            font-size: 0.875rem;
+            color: #dc3545;
+        }
+
+        .form-control.is-invalid, .form-select.is-invalid {
+            border-color: #dc3545;
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' width='12' height='12' fill='none' stroke='%23dc3545'%3e%3ccircle cx='6' cy='6' r='4.5'/%3e%3cpath stroke-linejoin='round' d='M5.8 3.6h.4L6 6.5z'/%3e%3ccircle cx='6' cy='8.2' r='.6' fill='%23dc3545' stroke='none'/%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right calc(0.375em + 0.1875rem) center;
+            background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);
+        }
+    </style>
+</head>
+<body class="bg-light">
+
+<div class="container">
+
+    <div>
+        <nav aria-label="breadcrumb" class="m-5">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a href="/maintenance/start" class="text-decoration-none fw-bold" style="font-size: 1.25rem;">
+                        Catálogo de Zapatillas
+                    </a>
+                </li>
+                <li class="breadcrumb-item active" aria-current="page">
+                    <span class="fw-bold" style="font-size: 1.25rem;">
+                        Editar datos de zapatilla&nbsp;<span th:text="${zapatillaEdit.zapatillaId()}"></span>
+                    </span>
+                </li>
+            </ol>
+        </nav>
+    </div>
+
+    <div class="header-section text-center">
+        <h2>Editar datos de zapatilla</h2>
+    </div>
+
+    <div class="form-container">
+        <form id="zapatillaForm" th:object="${zapatillaEdit}" th:action="@{/maintenance/edit-confirm}" method="post" novalidate>
+
+            <div class="mb-4 row">
+                <label for="zapatillaId" class="col-sm-3 form-label">Código</label>
+                <div class="col-sm-9">
+                    <input type="text" id="zapatillaId" th:field="*{zapatillaId}" class="form-control" readonly>
+                </div>
+            </div>
+
+            <div class="mb-4 row">
+                <label for="modelo" class="col-sm-3 form-label">Modelo</label>
+                <div class="col-sm-9">
+                    <input type="text" id="modelo" th:field="*{modelo}" class="form-control" required autocomplete="off">
+                    <div class="invalid-feedback">Por favor ingrese el modelo de la zapatilla</div>
+                </div>
+            </div>
+
+            <div class="mb-4 row">
+                <label for="marcaId" class="col-sm-3 form-label">Marca</label>
+                <div class="col-sm-9">
+                    <select id="marcaId" name="marcaId" th:field="*{marcaId}" class="form-select" required autocomplete="off">
+                        <option value="" disabled selected>Seleccione una marca</option>
+                        <option th:each="marca : ${marcas}" th:value="${marca.marcaId}" th:text="${marca.marca}"></option>
+                    </select>
+                    <div class="invalid-feedback">Por favor seleccione una marca</div>
+                </div>
+            </div>
+
+            <div class="mb-4 row">
+                <label for="categoriaId" class="col-sm-3 form-label">Categoría</label>
+                <div class="col-sm-9">
+                    <select id="categoriaId" name="categoriaId" th:field="*{categoriaId}" class="form-select" required autocomplete="off">
+                        <option value="" disabled selected>Seleccione una categoría</option>
+                        <option th:each="categoria : ${categorias}" th:value="${categoria.categoriaId}" th:text="${categoria.categoria}"></option>
+                    </select>
+                    <div class="invalid-feedback">Por favor seleccione una categoría</div>
+                </div>
+            </div>
+
+            <div class="mb-4 row">
+                <label for="descripcion" class="col-sm-3 form-label">Descripción</label>
+                <div class="col-sm-9">
+                    <textarea style="field-sizing:content; max-height: 150px" id="descripcion" th:field="*{descripcion}" class="form-control" rows="3" required autocomplete="off"></textarea>
+                    <div class="invalid-feedback">Por favor ingrese una descripción</div>
+                </div>
+            </div>
+
+            <div class="mb-4 row">
+                <label for="precio" class="col-sm-3 form-label">Precio</label>
+                <div class="col-sm-9">
+                    <input type="number" id="precio" th:field="*{precio}" class="form-control" step="0.01" min="0" required autocomplete="off">
+                    <div class="invalid-feedback">Por favor ingrese un precio válido</div>
+                </div>
+            </div>
+
+            <div class="mb-4 row">
+                <label for="stock" class="col-sm-3 form-label">Stock</label>
+                <div class="col-sm-9">
+                    <input type="number" id="stock" th:field="*{stock}" class="form-control" min="0" required autocomplete="off">
+                    <div class="invalid-feedback">Por favor ingrese una cantidad válida de stock</div>
+                </div>
+            </div>
+
+            <div class="mb-4 row">
+                <label for="urlimg" class="col-sm-3 form-label">URL de Imagen</label>
+                <div class="col-sm-9">
+                    <input type="url" id="urlimg" th:field="*{urlimg}" class="form-control" required autocomplete="off">
+                    <div class="invalid-feedback">Por favor ingrese una URL válida</div>
+                </div>
+            </div>
+
+            <div class="mb-3 row justify-content-center">
+                <div class="col-6 d-flex" style="gap: 15px;">
+                    <button type="submit" id="btnEdit" class="btn btn-primary w-100">
+                        Guardar cambios
+                    </button>
+                    <button type="button" id="btnCancel" class="btn btn-secondary w-100" onclick="location.href='/maintenance/start'">
+                        Cancelar
+                    </button>
+                </div>
+            </div>
+
+        </form>
+    </div>
+
+</div>
+
+<script>
+    // Espera a que el DOM esté completamente cargado
+    document.addEventListener("DOMContentLoaded", function () {
+        const form = document.getElementById('zapatillaForm');
+
+        // Escuchar el evento submit
+        form.addEventListener('submit', function (e) {
+            let valid = true;
+
+            // Validar Modelo
+            const modelo = document.getElementById('modelo');
+            if (modelo.value.trim() === '') {
+                modelo.classList.add('is-invalid');
+                valid = false;
+            } else {
+                modelo.classList.remove('is-invalid');
+            }
+
+            // Validar Marca
+            const marcaId = document.getElementById('marcaId');
+            if (marcaId.value === '') {
+                marcaId.classList.add('is-invalid');
+                valid = false;
+            } else {
+                marcaId.classList.remove('is-invalid');
+            }
+
+            // Validar Categoría
+            const categoriaId = document.getElementById('categoriaId');
+            if (categoriaId.value === '') {
+                categoriaId.classList.add('is-invalid');
+                valid = false;
+            } else {
+                categoriaId.classList.remove('is-invalid');
+            }
+
+            // Validar Descripción
+            const descripcion = document.getElementById('descripcion');
+            if (descripcion.value.trim() === '') {
+                descripcion.classList.add('is-invalid');
+                valid = false;
+            } else {
+                descripcion.classList.remove('is-invalid');
+            }
+
+            // Validar Precio
+            const precio = document.getElementById('precio');
+            if (precio.value <= 0) {
+                precio.classList.add('is-invalid');
+                valid = false;
+            } else {
+                precio.classList.remove('is-invalid');
+            }
+
+            // Validar Stock
+            const stock = document.getElementById('stock');
+            if (stock.value <= 0) {
+                stock.classList.add('is-invalid');
+                valid = false;
+            } else {
+                stock.classList.remove('is-invalid');
+            }
+
+            // Validar URL de Imagen
+            const urlimg = document.getElementById('urlimg');
+            const urlRegex = /^(https?:\/\/)?([a-z0-9-]+\.)+[a-z]{2,6}\/[^\s]*$/i;
+            if (!urlRegex.test(urlimg.value)) {
+                urlimg.classList.add('is-invalid');
+                valid = false;
+            } else {
+                urlimg.classList.remove('is-invalid');
+            }
+
+            // Si algún campo no es válido, evitar el envío del formulario
+            if (!valid) {
+                e.preventDefault();
+            }
+        });
+    });
+</script>
+
+</body>
+</html>

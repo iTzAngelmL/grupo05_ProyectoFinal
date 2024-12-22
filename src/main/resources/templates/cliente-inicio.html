@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tienda de Zapatillas</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .bg-custom-gradient {
+            background: linear-gradient(135deg, #3B82F6 0%, #2563EB 100%);
+        }
+        .bg-custom-card {
+            background: linear-gradient(135deg, #EFF6FF 0%, #DBEAFE 100%);
+        }
+        .hover-scale {
+            transition: transform 0.3s ease;
+        }
+        .hover-scale:hover {
+            transform: scale(1.03);
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .block {
+            display: block;
+        }
+
+    </style>
+</head>
+<body class="bg-blue-50" style="background-color: whitesmoke">
+<!-- Header -->
+<header class="bg-custom-gradient text-white shadow-lg blue-400" id="inicio">
+    <nav class="container mx-auto px-4 py-4">
+        <div class="flex justify-between items-center">
+            <div class="flex items-center space-x-4">
+                <div class="bg-white p-2 rounded-full">
+                    <img src="https://live.staticflickr.com/65535/54200526398_e34365ca0c.jpg" alt="Logo" class="h-10 w-15 rounded-full">
+                </div>
+                <h1 class="text-2xl font-bold">Sneaker Store</h1>
+            </div>
+            <div class="hidden md:flex items-center space-x-8">
+                <a href="#inicio" class="text-white hover:text-blue-200 transition-colors">Inicio</a>
+                <a href="#catalogo" class="text-white hover:text-blue-200 transition-colors">Catálogo</a>
+                <a href="#contacto" class="text-white hover:text-blue-200 transition-colors">Contacto</a>
+            </div>
+
+            <!-- Contenedor del botón y menú desplegable -->
+            <div class="relative inline-block text-left">
+                <!-- Botón del usuario -->
+                <div>
+                    <button onclick="toggleDropdown()" class="text-white hover:text-blue-200 bg-blue-600 p-2 rounded-full">
+                        <i class="fas fa-user text-xl"></i>
+                    </button>
+                </div>
+
+                <!-- Menú desplegable -->
+                <div id="dropdownMenu" class="hidden absolute right-0 mt-2 w-48 bg-white border border-gray-300 rounded-md shadow-lg z-50">
+                    <ul class="py-1">
+                        <li class="nav-item mx-4">
+                            <form th:action="@{/maintenance/logout}" method="post" style="display: inline;" id="logoutForm">
+                                <button type="button" class="btn btn-link nav-link text-red-600 hover:text-red-800" style="text-decoration: none;" onclick="confirmarCerrarSesion()">
+                                    <strong>Cerrar Sesión</strong>
+                                </button>
+                            </form>
+                        </li>
+                    </ul>
+                </div>
+
+            </div>
+
+        </div>
+    </nav>
+</header>
+
+<div class="container mx-auto p-4">
+    <!-- Banner promocional -->
+    <div class="bg-gradient-to-r from-blue-500 to-purple-500 rounded-xl shadow-lg p-8 mb-8 text-white">
+        <div class="flex flex-col md:flex-row items-center justify-between">
+            <div class="mb-4 md:mb-0">
+                <h2 class="text-3xl font-bold mb-2">¡Nuevas Colecciones!</h2>
+                <p class="text-blue-100">Descubre las últimas tendencias en calzado de las mejores marcas</p>
+            </div>
+
+            <button class="bg-white text-blue-600 px-8 py-3 rounded-lg hover:bg-blue-100 transition-colors font-bold shadow-md">
+                <a href="start" class="bg-white text-blue-600 px-8 py-3 rounded-lg hover:bg-blue-100 transition-colors font-bold shadow-md block text-center">
+                    Regresar al Mantemiento de Zapatillas
+                </a>
+            </button>
+
+            <button class="bg-white text-blue-600 px-8 py-3 rounded-lg hover:bg-blue-100 transition-colors font-bold shadow-md">
+                <a href="#catalogo" class="bg-white text-blue-600 px-8 py-3 rounded-lg hover:bg-blue-100 transition-colors font-bold shadow-md block text-center">
+                    Ver Catálogo de zapatillas
+                </a>
+            </button>
+        </div>
+    </div>
+
+    <div>
+        <section id="beneficios" class="max-w-7xl mx-auto px-4 py-16">
+            <h2 class="text-3xl font-bold text-gray-800 mb-12 text-center">¿Por qué comprar en Sneaker Store?</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <article class="benefit-card text-center p-6 border border-gray-200 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
+                    <div class="benefit-icon text-5xl text-teal-600 mb-4" aria-hidden="true">
+                        <i class="fas fa-shoe-prints"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Variedad de Modelos</h3>
+                    <p class="text-gray-600">Encuentra las últimas tendencias y estilos para cualquier ocasión.</p>
+                </article>
+
+                <article class="benefit-card text-center p-6 border border-gray-200 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
+                    <div class="benefit-icon text-5xl text-teal-600 mb-4" aria-hidden="true">
+                        <i class="fas fa-tags"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Precios Competitivos</h3>
+                    <p class="text-gray-600">Obtén la mejor relación calidad-precio con ofertas exclusivas en zapatillas.</p>
+                </article>
+
+                <article class="benefit-card text-center p-6 border border-gray-200 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
+                    <div class="benefit-icon text-5xl text-teal-600 mb-4" aria-hidden="true">
+                        <i class="fas fa-certificate"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">100% Originales</h3>
+                    <p class="text-gray-600">Garantizamos que cada par de zapatillas es auténtico y de calidad.</p>
+                </article>
+
+                <article class="benefit-card text-center p-6 border border-gray-200 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
+                    <div class="benefit-icon text-5xl text-teal-600 mb-4" aria-hidden="true">
+                        <i class="fas fa-truck"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Envío Rápido</h3>
+                    <p class="text-gray-600">Recibe tus zapatillas en tiempo récord, directamente en tu puerta.</p>
+                </article>
+
+                <article class="benefit-card text-center p-6 border border-gray-200 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
+                    <div class="benefit-icon text-5xl text-teal-600 mb-4" aria-hidden="true">
+                        <i class="fas fa-filter"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Filtros Personalizados</h3>
+                    <p class="text-gray-600">Encuentra el modelo ideal con filtros avanzados por modelo, marca, precio y categoría.</p>
+                </article>
+
+                <article class="benefit-card text-center p-6 border border-gray-200 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
+                    <div class="benefit-icon text-5xl text-teal-600 mb-4" aria-hidden="true">
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Productos Exclusivos</h3>
+                    <p class="text-gray-600">Encuentra modelos que no están disponibles en otras tiendas.</p>
+                </article>
+            </div>
+        </section>
+    </div>
+
+    <!-- Panel de filtros de búsqueda -->
+    <div class="bg-white rounded-lg shadow-lg border border-blue-100 p-6 mb-8" id="catalogo">
+        <h2 class="text-3xl font-bold text-gray-800 mb-12 text-center">Catálogo de Zapatillas</h2>
+        <h2 class="text-xl font-bold mb-4 text-blue-800">Filtro de búsqueda</h2>
+        <div class="grid grid-cols-1 lg:grid-cols-6 gap-6">
+            <!-- Buscador -->
+            <div class="lg:col-span-2">
+                <label for="searchInput" class="block text-sm font-medium text-blue-600 mb-1">Buscar</label>
+                <div class="relative">
+                    <input type="text" id="searchInput" placeholder="Nombre del modelo..."
+                           class="w-full p-3 pl-10 border border-blue-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-blue-50">
+                    <i class="fas fa-search absolute left-3 top-3.5 text-blue-400"></i>
+                </div>
+            </div>
+
+            <!-- selector de Marca -->
+            <div class="lg:col-span-1">
+                <label for="brandSelect" class="block text-sm font-medium text-blue-600 mb-1">Marca</label>
+                <select id="brandSelect"
+                        class="w-full p-3 border border-blue-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-blue-50">
+                    <option value="">Todas</option>
+                    <option value="nike">Nike</option>
+                    <option value="adidas">Adidas</option>
+                    <option value="puma">Puma</option>
+                    <option value="new balance">New Balance</option>
+                    <option value="reebok">Reebok</option>
+                    <option value="asics">Asics</option>
+                </select>
+            </div>
+
+            <!-- selector de categoría -->
+            <div class="lg:col-span-1">
+                <label for="categorySelect" class="block text-sm font-medium text-blue-600 mb-1">Categoría</label>
+                <select id="categorySelect"
+                        class="w-full p-3 border border-blue-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-blue-50">
+                    <option value="">Todas</option>
+                    <option value="deportivo">Deportivo</option>
+                    <option value="running">Running</option>
+                    <option value="casual">Casual</option>
+                    <option value="entrenamiento">Entrenamiento</option>
+                    <option value="trail">Trail</option>
+                </select>
+            </div>
+
+            <!-- Rango de Precio -->
+            <div class="lg:col-span-2">
+                <label class="block text-sm font-medium text-blue-600 mb-1">Rango de precio</label>
+                <div class="flex gap-4">
+                    <div class="w-1/2">
+                        <div class="flex items-center">
+                            <span class="text-blue-500 mr-1">S/</span>
+                            <input type="number" id="minPrice" min="0" max="800" value="0"
+                                   class="w-full p-3 border border-blue-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-blue-50">
+                        </div>
+                        <input type="range" id="priceRangeMin" min="0" max="800" step="10" class="w-full mt-2 accent-blue-600">
+                    </div>
+                    <div class="w-1/2">
+                        <div class="flex items-center">
+                            <span class="text-blue-500 mr-1">S/</span>
+                            <input type="number" id="maxPrice" min="0" max="800" value="800"
+                                   class="w-full p-3 border border-blue-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-blue-50">
+                        </div>
+                        <input type="range" id="priceRangeMax" min="0" max="800" step="10" class="w-full mt-2 accent-blue-600">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Grid de Zapatillas -->
+    <div id="zapatillasGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        <!-- Card de Zapatilla con Thymeleaf -->
+        <div th:each="zapatilla : ${clienteInicio}" th:class="zapatilla-card"
+             th:data-precio="${zapatilla.precio()}"
+             th:data-marca="${zapatilla.marca()}"
+             th:data-categoria="${zapatilla.categoria()}"
+             th:data-modelo="${zapatilla.modelo()}"
+             class="bg-white rounded-xl shadow-lg overflow-hidden hover-scale">
+            <div class="relative h-60 group">
+                <img th:src="${zapatilla.urlimg()}" th:alt="${zapatilla.modelo()}"
+                     class="w-full h-full object-cover">
+            </div>
+            <div class="p-4 bg-gradient-to-br from-blue-50 to-white">
+                <h2 class="text-lg font-bold mb-2 text-blue-800" th:text="${zapatilla.modelo()}">Modelo Zapatilla</h2>
+                <p class="text-blue-600 mb-2">Código: <span th:text="${zapatilla.zapatillaId()}" class="font-medium"></span></p>
+                <p class="text-blue-600 mb-2">Marca: <span th:text="${zapatilla.marca()}" class="font-medium"></span></p>
+                <p class="text-blue-600 mb-2">Categoría: <span th:text="${zapatilla.categoria()}" class="font-medium"></span></p>
+                <p class="text-blue-600 mb-2">Stock: <span th:text="${zapatilla.stock()}" class="font-medium"></span> unidades</p>
+            </div>
+            <div class="p-4 pt-0 flex justify-between items-center border-t border-blue-100">
+                <span class="text-2xl font-bold text-blue-600">S/ <span th:text="${zapatilla.precio()}"></span></span>
+                <button th:if="${zapatilla.stock() > 0}"
+                        class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2 shadow-md">
+                    <i class="fas fa-shopping-cart"></i>
+                    <a th:href="@{/maintenance/compra/{id}(id=${zapatilla.zapatillaId()})}"
+                       class="text-white no-underline hover:underline">Comprar</a>
+                </button>
+                <span th:if="${zapatilla.stock() == 0}"
+                      class="text-red-500 font-medium flex items-center gap-2">
+                    <i class="fas fa-times-circle"></i>
+                    Agotado
+                </span>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- Footer -->
+<footer class="bg-gradient-to-r from-white-100 to-white-100 text-white mt-12 footer" id="contacto" style="background-color: black">
+    <div class="container mx-auto px-4 py-12">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+            <div>
+                <h3 class="text-lg font-bold mb-4">Sobre Nosotros</h3>
+                <p class="text-blue-200">Tu tienda de confianza para encontrar las mejores marca de calzado al mejor precio.</p>
+            </div>
+            <div>
+                <h3 class="text-lg font-bold mb-4">Enlaces Rápidos</h3>
+                <ul class="space-y-2">
+                    <li><a href="#inicio" class="text-blue-200 hover:text-white transition-colors">Inicio</a></li>
+                    <li><a href="#catalogo" class="text-blue-200 hover:text-white transition-colors">Catálogo</a></li>
+                    <li><a href="#Contactos" class="text-blue-200 hover:text-white transition-colors">Contactos</a></li>
+                </ul>
+            </div>
+
+            <div class="space-y-4">
+                <h3 class="text-lg font-bold mb-4">Contacto</h3>
+                <p class="flex items-center">
+                    <i class="fas fa-phone text-teal-600 mr-2"></i>
+                    (01) 555-0123
+                </p>
+                <p class="flex items-center">
+                    <i class="fas fa-envelope text-teal-600 mr-2"></i>
+                    sneaker@store.pe
+                </p>
+                <p class="flex items-center">
+                    <i class="fas fa-map-marker-alt text-teal-600 mr-2"></i>
+                    Av. Principal 123, Trujillo
+                </p>
+            </div>
+
+            <div>
+                <h3 class="text-lg font-bold mb-4">Síguenos</h3>
+                <div class="flex space-x-4">
+                    <ul style="list-style: none; padding: 0; display: flex; justify-content: center; gap: 15px;">
+                        <li><a href="https://www.facebook.com/" target="_blank" rel="noopener noreferrer nofollow"><i class="fab fa-facebook" style="color: #3b5998; font-size: 24px;"></i></a></li>
+                        <li><a href="https://www.twitter.com/" target="_blank" rel="noopener noreferrer nofollow"><i class="fab fa-twitter" style="color: #1da1f2; font-size: 24px;"></i></a></li>
+                        <li><a href="https://www.youtube.com/" target="_blank" rel="noopener noreferrer nofollow"><i class="fab fa-youtube" style="color: #ff0000; font-size: 24px;"></i></a></li>
+                        <li><a href="https://www.instagram.com/" target="_blank" rel="noopener noreferrer nofollow"><i class="fab fa-instagram" style="color: #e1306c; font-size: 24px;"></i></a></li>
+                        <li><a href="https://www.linkedin.com/school/cibertec/" target="_blank" rel="noopener noreferrer nofollow"><i class="fab fa-linkedin" style="color: #0077b5; font-size: 24px;"></i></a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="border-t border-blue-700 mt-8 pt-8 text-center text-blue-200">
+            <p>&copy; 2024 IncaBus. Todos los derechos reservados.</p>
+            <br>
+        </div>
+    </div>
+</footer>
+
+<script th:inline="javascript">
+    document.addEventListener('DOMContentLoaded', function() {
+        // Elementos del DOM
+        const searchInput = document.getElementById('searchInput');
+        const brandSelect = document.getElementById('brandSelect');
+        const categorySelect = document.getElementById('categorySelect');
+        const minPriceInput = document.getElementById('minPrice');
+        const maxPriceInput = document.getElementById('maxPrice');
+        const priceRangeMin = document.getElementById('priceRangeMin');
+        const priceRangeMax = document.getElementById('priceRangeMax');
+        const zapatillaCards = document.getElementsByClassName('zapatilla-card');
+
+        // Función para sincronizar inputs numéricos con sliders
+        function syncPriceInputs() {
+            const minVal = parseInt(minPriceInput.value);
+            const maxVal = parseInt(maxPriceInput.value);
+
+            // Asegurar que el precio mínimo no sea mayor que el máximo
+            if (minVal > maxVal) {
+                minPriceInput.value = maxVal;
+                priceRangeMin.value = maxVal;
+            }
+
+            // Asegurar que el precio máximo no sea menor que el mínimo
+            if (maxVal < minVal) {
+                maxPriceInput.value = minVal;
+                priceRangeMax.value = minVal;
+            }
+
+            priceRangeMin.value = minPriceInput.value;
+            priceRangeMax.value = maxPriceInput.value;
+        }
+
+        // Función principal de filtrado
+        function filterZapatillas() {
+            const searchTerm = searchInput.value.toLowerCase();
+            const selectedBrand = brandSelect.value.toLowerCase();
+            const selectedCategory = categorySelect.value.toLowerCase();
+            const minPrice = parseInt(minPriceInput.value);
+            const maxPrice = parseInt(maxPriceInput.value);
+
+            Array.from(zapatillaCards).forEach(card => {
+                const modelo = card.getAttribute('data-modelo').toLowerCase();
+                const marca = card.getAttribute('data-marca').toLowerCase();
+                const categoria = card.getAttribute('data-categoria').toLowerCase();
+                const precio = parseInt(card.getAttribute('data-precio'));
+
+                const matchesSearch = modelo.includes(searchTerm);
+                const matchesBrand = selectedBrand === '' || marca === selectedBrand;
+                const matchesCategory = selectedCategory === '' || categoria === selectedCategory;
+                const matchesPrice = precio >= minPrice && precio <= maxPrice;
+
+                card.style.display =
+                    matchesSearch && matchesBrand && matchesCategory && matchesPrice
+                        ? 'block'
+                        : 'none';
+            });
+        }
+
+        // Event listeners
+        let searchTimeout;
+        searchInput.addEventListener('input', () => {
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(filterZapatillas, 300);
+        });
+
+        brandSelect.addEventListener('change', filterZapatillas);
+        categorySelect.addEventListener('change', filterZapatillas);
+
+        // Event listeners para los controles de precio
+        minPriceInput.addEventListener('input', () => {
+            syncPriceInputs();
+            filterZapatillas();
+        });
+
+        maxPriceInput.addEventListener('input', () => {
+            syncPriceInputs();
+            filterZapatillas();
+        });
+
+        priceRangeMin.addEventListener('input', (e) => {
+            minPriceInput.value = e.target.value;
+            syncPriceInputs();
+            filterZapatillas();
+        });
+
+        priceRangeMax.addEventListener('input', (e) => {
+            maxPriceInput.value = e.target.value;
+            syncPriceInputs();
+            filterZapatillas();
+        });
+
+        // Inicialización
+        syncPriceInputs();
+        filterZapatillas();
+    });
+
+    function toggleDropdown() {
+        const dropdownMenu = document.getElementById('dropdownMenu');
+        if (dropdownMenu.classList.contains('hidden')) {
+            dropdownMenu.classList.remove('hidden');
+            dropdownMenu.classList.add('block');
+        } else {
+            dropdownMenu.classList.remove('block');
+            dropdownMenu.classList.add('hidden');
+        }
+    }
+
+    function confirmarCerrarSesion() {
+        if (confirm('¿Estás seguro de que deseas cerrar sesión?')) {
+            document.getElementById('logoutForm').submit();
+        }
+    }
+
+
+
+
+</script>
+</body>
+</html>
